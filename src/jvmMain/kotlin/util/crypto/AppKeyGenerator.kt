@@ -7,10 +7,6 @@ import java.security.KeyPairGenerator
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.SecretKeySpec
 
-enum class CryptoAlgorithm(val value: String) {
-    RSA("RSA"), AES("AES")
-}
-
 class AppKeyGenerator {
     companion object {
         val KEY_SIZES: List<Int> = listOf(1024, 2048, 3072, 4096)

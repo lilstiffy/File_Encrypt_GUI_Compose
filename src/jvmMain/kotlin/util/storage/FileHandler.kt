@@ -3,9 +3,9 @@ package util.storage
 import java.io.*
 
 object FileHandler {
-    fun <T : Serializable> writeObjectToFile(obj: T, fileName: String, path: String) {
+    fun <T : Serializable> writeObjectToFile(obj: T, file: File) {
         try {
-            ObjectOutputStream(FileOutputStream("$path/${fileName}.ser")).use { stream ->
+            ObjectOutputStream(FileOutputStream(file)).use { stream ->
                 stream.writeObject(obj)
             }
         } catch (e: Exception) {
@@ -13,7 +13,10 @@ object FileHandler {
         }
     }
 
-    inline fun <reified T : Serializable> readFileToObject(file: File): T? {
+    inline fun <reified T : Serializable> readFileToObject(file: File?): T? {
+        if (file == null)
+            return null
+
         return try {
             ObjectInputStream(FileInputStream(file)).use { stream ->
                 stream.readObject() as? T
