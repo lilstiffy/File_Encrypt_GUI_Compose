@@ -12,6 +12,9 @@ enum class CryptoAlgorithm(val value: String) {
 }
 
 class AppKeyGenerator {
+    companion object {
+        val KEY_SIZES: List<Int> = listOf(1024, 2048, 3072, 4096)
+    }
     /**
      * This code generates a symmetric encryption key using the Advanced Encryption Standard (AES) algorithm with a key size of [withSize] bits.
      * @author Peter Westin & Stefan Smudja

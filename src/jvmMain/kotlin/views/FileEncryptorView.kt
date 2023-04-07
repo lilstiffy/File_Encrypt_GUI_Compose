@@ -18,6 +18,7 @@ import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
 import java.security.Key
+import java.security.PrivateKey
 import java.security.PublicKey
 import javax.swing.JFileChooser
 
@@ -70,7 +71,7 @@ fun FileEncryptorView(viewModel: FileEncryptorViewModel) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Button(onClick = {
-                            val dialog = FileDialog(Frame(), "Select a file")
+                            val dialog = FileDialog(Frame(), "Select a public key")
                             dialog.isVisible = true
                             if (dialog.file != null) {
                                 viewModel.selectedPublicKey.value =
@@ -78,17 +79,19 @@ fun FileEncryptorView(viewModel: FileEncryptorViewModel) {
                                 println(viewModel.selectedPublicKey.value)
                             }
                         }) {
-                            Text("Set Public key")
+                            Text("Set Public key ${if (viewModel.selectedPublicKey.value != null) "✅" else "❌"}")
                         }
 
                         Button(onClick = {
-                            val dialog = FileDialog(Frame(), "Select a file")
+                            val dialog = FileDialog(Frame(), "Select a private key")
                             dialog.isVisible = true
                             if (dialog.file != null) {
                                 viewModel.selectedPrivateKey.value =
-                                    FileHandler.readFileToObject<PublicKey>(File(dialog.directory + dialog.file))                            }
+                                    FileHandler.readFileToObject<PrivateKey>(File(dialog.directory + dialog.file))
+                                println(viewModel.selectedPrivateKey.value)
+                            }
                         }) {
-                            Text("Set Private key")
+                            Text("Set Private key ${if (viewModel.selectedPrivateKey.value != null) "✅" else "❌"}")
                         }
 
                         //Generate keypair button
@@ -103,6 +106,16 @@ fun FileEncryptorView(viewModel: FileEncryptorViewModel) {
                             //Button Text
                             Text("Generate new key pair")
                         }
+
+                        //Key size picker
+                        AppTheme.DropdownSelector(
+                            values = AppKeyGenerator.KEY_SIZES,
+                            suffix = "bits",
+                            onValueSelected = { newVal ->
+                                viewModel.selectedKeySize.value = newVal
+                            }
+                        )
+
                     }
                 }
             }
@@ -113,12 +126,13 @@ fun FileEncryptorView(viewModel: FileEncryptorViewModel) {
 class FileEncryptorViewModel {
     //States
     val selectedFile = mutableStateOf<File?>(null)
+    val selectedKeySize = mutableStateOf(4096)
     val selectedPrivateKey = mutableStateOf<Key?>(null)
     val selectedPublicKey = mutableStateOf<Key?>(null)
 
     fun generateKeypair(at: File) {
         with(AppKeyGenerator()) {
-            val keypair = generateRSAKeyPair(4096)
+            val keypair = generateRSAKeyPair(selectedKeySize.value)
             keypair.private.let { FileHandler.writeObjectToFile(it, "private_key", at.path) }
             keypair.public.let { FileHandler.writeObjectToFile(it, "public_key", at.path) }
         }

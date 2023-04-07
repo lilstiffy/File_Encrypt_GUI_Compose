@@ -7,6 +7,7 @@ import views.FileEncryptorViewModel
 
 fun main() = application {
     Window(
+        title = "File encryptor",
         resizable = false,
         onCloseRequest = ::exitApplication
     ) {
