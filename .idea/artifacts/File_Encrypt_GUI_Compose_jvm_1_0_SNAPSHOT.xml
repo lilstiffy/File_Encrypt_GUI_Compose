@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="file_encrypt_gui_compose-jvm-1.0-SNAPSHOT">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="file_encrypt_gui_compose-jvm-1.0-SNAPSHOT.jar" />
+  </artifact>
+</component>
